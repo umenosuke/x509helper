@@ -34,13 +34,17 @@ extendedKeyUsage = clientAuth
 authorityKeyIdentifier=keyid,issuer
 EOS
 
-openssl ca -days "${CLIENT_TTL}" \
-  -extfile "${CLIENT_x509_EXT}" \
-  -in "${CLIENT_CSR}" \
-  -out "${CLIENT_CERT}"
+if [ ! -e "${CLIENT_CERT}" ]; then
+  openssl ca -days "${CLIENT_TTL}" \
+    -extfile "${CLIENT_x509_EXT}" \
+    -in "${CLIENT_CSR}" \
+    -out "${CLIENT_CERT}"
+fi
 
-openssl pkcs12 -export -clcerts \
-  -inkey "${CLIENT_PRIVATE}" \
-  -in "${CLIENT_CERT}" \
-  -out "${CLIENT_P12}" \
-  -passout pass:
+if [ ! -e "${CLIENT_P12}" ]; then
+  openssl pkcs12 -export -clcerts \
+    -inkey "${CLIENT_PRIVATE}" \
+    -in "${CLIENT_CERT}" \
+    -out "${CLIENT_P12}" \
+    -passout pass:
+fi

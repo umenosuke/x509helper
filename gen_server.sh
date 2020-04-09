@@ -43,10 +43,12 @@ extendedKeyUsage = serverAuth
 authorityKeyIdentifier=keyid,issuer
 EOS
 
-openssl ca -days "${SERVER_TTL}" \
-  -extfile "${SERVER_x509_EXT}" \
-  -in "${SERVER_CSR}" \
-  -out "${SERVER_CERT}" \
-  -notext
+if [ ! -e "${SERVER_CERT}" ]; then
+  openssl ca -days "${SERVER_TTL}" \
+    -extfile "${SERVER_x509_EXT}" \
+    -in "${SERVER_CSR}" \
+    -out "${SERVER_CERT}" \
+    -notext
 
-cat "${CA_CERT}" >> "${SERVER_CERT}"
+  cat "${CA_CERT}" >> "${SERVER_CERT}"
+fi

@@ -28,7 +28,9 @@ CA_SUBJECT='/C='"${CA_SUBJECT_countryName}"'/ST='"${CA_SUBJECT_stateOrProvinceNa
 echo ${CA_SUBJECT}
 
 cp /etc/pki/tls/openssl.cnf "${CA_CONF}"
-openssl req -new -config "${CA_CONF}" -x509 -days "${CA_TTL}" -key "${CA_PRIVATE}" -out "${CA_CERT}" -subj "${CA_SUBJECT}"
+if [ ! -e "${CA_CERT}" ]; then
+  openssl req -new -config "${CA_CONF}" -x509 -days "${CA_TTL}" -key "${CA_PRIVATE}" -out "${CA_CERT}" -subj "${CA_SUBJECT}"
+fi
 
 cp "${CA_CERT}" /etc/pki/CA/cacert.pem
 cp "${CA_PRIVATE}" /etc/pki/CA/private/cakey.pem
